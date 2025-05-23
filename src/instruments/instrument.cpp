@@ -1,5 +1,9 @@
 #include <iostream>
 #include "instrument_dumb.h"
+#include "seno.h"
+#include "percussive.h"
+#include "senoFM.h"
+#include "SenoFMSimple.h"
 
 /*
   For each new instrument:
@@ -17,6 +21,18 @@ namespace upc {
     //    cout << name << ": " << parameters << endl;
     if (name == "InstrumentDumb") {
       pInst = (Instrument *) new InstrumentDumb(parameters);
+    }
+    if (name == "InstrumentSeno") {
+      pInst = (Instrument *) new InstrumentSeno(parameters);
+    }
+    if (name == "PercussiveInstrument") {
+      pInst = (Instrument *) new PercussiveInstrument(parameters);
+    }
+    if (name == "SenoFM") {
+      pInst = (Instrument *) new SenoFM(parameters);
+    }
+    if (name == "SenoFMSimple") {
+      pInst = (Instrument *) new SenoFMSimple(parameters);
     }
     return pInst;
   }

@@ -1,6 +1,8 @@
 #include <iostream>
+#include "effect.h"
 #include "tremolo.h"
 #include "vibrato.h"
+#include "fuzz.h"
 
 /*
   For each new effect:
@@ -11,16 +13,29 @@
 
 using namespace std;
 
+#include <iostream>
+#include "effect.h"
+#include "tremolo.h"
+#include "vibrato.h"
+#include "fuzz.h"  // Incluir el header del efecto Fuzz
+
+using namespace std;
+
 namespace upc {
   Effect *get_effect(const string &name, const string &parameters) {
-    Effect *pEffect = 0;
-    //    cout << name << ": " << parameters << endl;
+    Effect *pEffect = nullptr; // Usar nullptr en lugar de 0 para punteros
+
     if (name == "Tremolo") {
-      pEffect = (Effect *) new Tremolo(parameters);
+      pEffect = static_cast<Effect *>(new Tremolo(parameters));
     }
-	else if (name == "Vibrato") {
-      pEffect = (Effect *) new Vibrato(parameters);
+    else if (name == "Vibrato") {
+      pEffect = static_cast<Effect *>(new Vibrato(parameters));
     }
+    else if (name == "Fuzz") {
+      pEffect = static_cast<Effect *>(new Fuzz(parameters));
+    }
+
     return pEffect;
   }
 }
+
