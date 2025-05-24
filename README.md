@@ -20,7 +20,7 @@ ejercicios indicados.
 ## Ejercicios.
 
 
-*mencionar que todos nuestros comentarios son escritos en cursivo*
+
 
 ### Envolvente ADSR.
 
@@ -28,11 +28,11 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
 
 * Un instrumento con una envolvente ADSR genérica, para el que se aprecie con claridad cada uno de sus parámetros: ataque (A), caída (D), mantenimiento (S) y liberación (R).
 
-  - *Podemos observar una ADSR genérica, con un ataque del 10% de duración, una caída del 20%, un mantenimiento del 50% y una liberación final del 20% (porcentajes relativos a un intervalo de tiempo determinado).* 
+  - *A continuación adjuntamos la grafica de ADSR genérica, donde podemos observar que el parametro ataque tiene un 10% de duración, el de caída consiste en un 20%, el de  mantenimiento un  50% y hay una liberación final del 20% (porcentajes relativos a un intervalo de tiempo determinado).* 
 
   ![gráfica de una ADSR genérica](img/ADSR_generica.png)
   
-  - *A continuación, se muestra un ejemplo específico utilizando el instrumento `seno` (con los parámetros de la envolvente ADSR anteriores) para la generación de la primera nota "do" del archivo `doremi.sco`. El archivo de audio resultante se llama `seno.wav`. El comando utilizado para generar el archivo de audio es:*
+  - *Adjuntamos un caso practico,como ejemplo utilizamos el instrumento seno con los parámetros de la envolvente ADSR anteriores para la generación de la primera nota "do" del archivo `doremi.sco`. Creamos el archivo de audio, el cual se llama seno.wav ejecutando el siguiente codigo:*
 
     ```sh
     synth seno.orc doremi.sco seno.wav
@@ -54,17 +54,17 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
 
       ![gráfica de una ADSR percusiva (1)](img/ADSR_percusivo1.png)
 
-      *La generación de la forma de onda con dichos parámetros propios de un instrumento percusivo con dichas características se volvió a realizar con el programa `synth`, de las misma forma que se hizo con el primer instrumento. Se volvió a usar la primera nota **do** de la orquestación `DoReMi`.*
+      *La generación de la forma de onda con dichos parámetros propios de un instrumento percusivo con dichas características se volvió a realizar con el programa `synth`, de la misma forma que se hizo con el primer instrumento. Se volvió a usar la primera nota **do** de la orquestación `DoReMi`.*
 
       ![ADSR Curve](img/ADSR_doremi_percussive1.png)
 
     * El intérprete da por finalizada la nota antes de su completa extinción, iniciándose una disminución abrupta del sonido hasta su finalización.
 
-      - *Ahora el tramo de liberación debe suponer una mayor extensión, debido a que, como dice el enunciado, el intérprete ha dado por finalizada la nota "antes de tiempo".*
+      - *Ahora el tramo de liberación es de mayor extensión ya que el intérprete ha dado por finalizada la nota "antes de tiempo".*
 
       ![gráfica de una ADSR percusiva (2)](img/ADSR_percusivo2.png)
 
-      *La representación de la forma de onda para este tipo de ADSR se visualiza imediatamente abajo, donde la decaída del instrumento debido a la finalización por el intérprete se representa con una pérdida de envolvente de carácter exponencial:*
+      *Adjuntamos la grafica de la forma de onda de este tipo de ADSR donde podemos observar que la decaída del instrumento debido a la finalización por el intérprete se representa con una pérdida de carácter exponencial:*
 
       ![ADSR Curve](img/ADSR_doremi_percussive2.png)
 
@@ -72,11 +72,11 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
 
 * Un instrumento *plano*, como los de cuerdas frotadas (violines y semejantes) o algunos de viento. En ellos, el ataque es relativamente rápido hasta alcanzar el nivel de mantenimiento (sin sobrecarga), y la liberación también es bastante rápida.
 
-  - *podemos ver como el ADSR descrito abajo cumple con las condiciones de dicho tipo de instrumento:*
+  - *Vemos como el ADSR descrito abajo cumple con las condiciones de dicho tipo de instrumento:*
 
   ![gráfica de una ADSR plana](img/ADSR_plano.png)
 
-  *Y como siempre, la ejecución de la orquestación `DoReMi` mediante el programa `synth` con un instrumento seno del tipo "plano" puede verse a continuación (como siempre, solo se representa la primer nota de la orquestación, el `do`).*
+  *Ejecutamos la orquestación `DoReMi` mediante el programa `synth` con un instrumento seno del tipo "plano" , solo se representa la primer nota de la orquestación, el `do`.*
 
   ![ADSR Curve](img/ADSR_doremi_plano.png)
 
@@ -263,15 +263,15 @@ float InstrumentSeno::getInterpolatedValue(const float phas)
 ```
 - Explique qué método se ha seguido para asignar un valor a la señal a partir de los contenidos en la tabla, e incluya una gráfica en la que se vean claramente (use pelotitas en lugar de líneas) los valores de la tabla y los de la señal generada.
 
-  *Como se ve en el `for()` del constructor de la clase **InstrumentSeno**, la tabla se construye en base a un periodo entero de una señal senoidal como cualquier otra, en incrementos que van en función del número de muestras que deseamos tener dentro de la tabla, es decir, como más puntos almacenemos, más pequeños serán los incrementos y por lo tanto tendremos el equivalente de un periodo de senoide almacenado en la tabla muestreado con frecuencia de muestreo más alta.*
+  *Como se ve en el for() del constructor de la clase **InstrumentSeno**, la tabla se construye en base a un periodo entero de una señal senoidal como cualquier otra, en incrementos que van en función del número de muestras que deseamos tener dentro de la tabla, es decir, como más puntos almacenemos, más pequeños serán los incrementos y por lo tanto tendremos el equivalente de un periodo de senoide almacenado en la tabla muestreado con frecuencia de muestreo más alta.*
 
-  *Cuando los valores estén ya dentro de la tabla, la recorremos con una velocidad determinada, cosa que viene dada por la frecuencia fundamental del propio instrumento seno mediante la conversión de **note** (valor determinado por el fichero `.sco`) a f0:*
+  *Cuando los valores estén ya dentro de la tabla, la recorremos con una velocidad determinada, cosa que viene dada por la frecuencia fundamental del propio instrumento seno mediante la conversión de "note" (valor determinado por el fichero `.sco`) a f0:*
 
   ```cpp
   f0 = 440.0f * pow(2.0f, (note - 69.0f) / 12.0f);
   ```
 
-  *El recorrido de la tabla se realiza posterior a una llamada al método **command()**, donde en caso de iniciarse una nota, declaramos la variable que nos indica la velocidad a la cual recorrer la tabla, cuya línia de código se explicita a continuación:*
+  *El recorrido de la tabla se realiza posterior a una llamada al método command(), donde en caso de iniciarse una nota, declaramos la variable que nos indica la velocidad a la cual recorrer la tabla, lo ejecutamos asi:*
 
   ```cpp
   increment = ((f0 / SamplingRate) * tbl.size());
