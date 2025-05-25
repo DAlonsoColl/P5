@@ -31,7 +31,7 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
   - *A continuación adjuntamos la grafica de ADSR genérica, donde podemos observar que el parametro ataque tiene un 10% de duración, el de caída consiste en un 20%, el de  mantenimiento un  50% y hay una liberación final del 20% (porcentajes relativos a un intervalo de tiempo determinado).* 
 
   ![gráfica de una ADSR genérica](img/ADSR_generica.png)
-  
+ 
   - *Adjuntamos un caso practico,como ejemplo utilizamos el instrumento seno con los parámetros de la envolvente ADSR anteriores para la generación de la primera nota "do" del archivo `doremi.sco`. Creamos el archivo de audio, el cual se llama seno.wav ejecutando el siguiente codigo:*
 
     ```sh
@@ -156,35 +156,7 @@ x[i] = A * tbl[round(phas)];
 - Si ha implementado la síntesis por tabla almacenada en fichero externo, incluya a continuación el código
   del método `command()`.
 
-```
-void InstrumentSeno::command(long cmd, long note, long vel) {
-    f0 = 440.0f * pow(2.0f, (note - 69.0f) / 12.0f); // Conversión de nota a frecuencia
-
-    if (cmd == 9) { // 'Key' pressed: attack begins
-        bActive = true;
-        adsr.start();
-        index = 0;
-        phas = 0.0f;
-        increment = ((f0 / SamplingRate) * tbl.size());
-        A = vel / 127.0f;
-        
-        // Cargar la tabla desde un fichero externo
-        std::ifstream file("sine_table.dat");
-        if (file.is_open()) {
-            for (int i = 0; i < tbl.size(); ++i) {
-                file >> tbl[i];
-            }
-            file.close();
-        } else {
-            std::cerr << "Error: no se pudo abrir el archivo sine_table.dat" << std::endl;
-        }
-    } else if (cmd == 8) { // 'Key' released: sustain ends, release begins
-        adsr.stop();
-    } else if (cmd == 0) { // Sound extinguished without waiting for release to end
-        adsr.end();
-    }
-}
-```  
+![Codigo5](img/Codigo5.png)
 
 ---
 ---
@@ -202,30 +174,8 @@ void InstrumentSeno::command(long cmd, long note, long vel) {
 *Primero se partió de los siguientes ficheros para generar el `.wav` de donde extraeríamos la señal a analizar:*
 
 ***doremi.sco***
+![catTremolo](img/catremolo.png)
 
-```shell
-#Time; On (8)/Off (9); Channel; Note; Velocity;
-#Time; Control; Channel; Effect; On/Off;
-0	9	1	60	100
-120	8	1	60	100
-0   12  1   13  1 #trémolo inicio
-40	9	1	62	100
-120	8	1	62	100
-40	9	1	64	100
-120	8	1	64	100
-40	9	1	65	100
-120	8	1	65	100
-40	9	1	67	100
-120	8	1	67	100
-40	9	1	69	100
-120	8	1	69	100
-40	9	1	71	100
-0   12  1   13  0 #trémolo final
-120	8	1	71	100
-40	9	1	72	100
-120	8	1	72	100
-40	0	1	0	0
-```
 
 ***effects.orc***
 
@@ -315,33 +265,9 @@ synth -e effects.orc seno.orc doremi.sco seno_tremolo_agresivo.wav
 ```
 
 ***doremi.sco***
+![catvibrato](img/catvibrato.png)
 
-```
-#Time; On (8)/Off (9); Channel; Note; Velocity;
-#Time; Control; Channel; Effect; On/Off;
-0	9	1	60	100
-120	8	1	60	100
-0   12  1   14  1 #vibrato inicio
-40	9	1	62	100
-120	8	1	62	100
-40	9	1	64	100
-120	8	1	64	100
-40	9	1	65	100
-120	8	1	65	100
-40	9	1	67	100
-120	8	1	67	100
-40	9	1	69	100
-120	8	1	69	100
-40	9	1	71	100
-0   12  1   14  0 #vibrato final
-120	8	1	71	100
-40	9	1	72	100
-120	8	1	72	100
-40	0	1	0	0
-```
-
-*Luego ejecutamos el programa **synth** como siempre:*
-
+*Luego ejecutamos el programa **synth**
 ```
 synth -e effects.orc seno.orc doremi.sco seno_vibrato_normal.wav
 ```
