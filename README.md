@@ -40,7 +40,7 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
 
     *La gráfica a continuación ilustra las fases de Ataque (A), Decaimiento (D), Mantenimiento (S) y Liberación (R) de la señal de audio generada:*
 
-    ![ADSR Curve](img/ADSR_doremi_seno.png)
+    ![ADSR Curve](img/ADSR1.png)
 
     *En esta gráfica, podemos observar claramente cómo la envolvente ADSR se aplica a una nota específica del instrumento `seno`.*
 
@@ -56,7 +56,7 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
 
       *La generación de la forma de onda con dichos parámetros propios de un instrumento percusivo con dichas características se volvió a realizar con el programa `synth`, de la misma forma que se hizo con el primer instrumento. Se volvió a usar la primera nota **do** de la orquestación `DoReMi`.*
 
-      ![ADSR Curve](img/ADSR_doremi_percussive1.png)
+      ![ADSR Curve](img/ADSR2.png)
 
     * El intérprete da por finalizada la nota antes de su completa extinción, iniciándose una disminución abrupta del sonido hasta su finalización.
 
@@ -66,7 +66,7 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
 
       *Adjuntamos la grafica de la forma de onda de este tipo de ADSR donde podemos observar que la decaída del instrumento debido a la finalización por el intérprete se representa con una pérdida de carácter exponencial:*
 
-      ![ADSR Curve](img/ADSR_doremi_percussive2.png)
+      ![ADSR Curve](img/ADSR3.png)
 
   - Debera representar en esta memoria **ambos** posibles finales de la nota.
 
@@ -78,7 +78,7 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
 
   *Ejecutamos la orquestación `DoReMi` mediante el programa `synth` con un instrumento seno del tipo "plano" , solo se representa la primer nota de la orquestación, el `do`.*
 
-  ![ADSR Curve](img/ADSR_doremi_plano.png)
+  ![ADSR Curve](img/ADSR4.png)
 
 Para los cuatro casos, deberá incluir una gráfica en la que se visualice claramente la curva ADSR. Deberá añadir la información necesaria para su correcta interpretación, aunque esa información puede reducirse a colocar etiquetas y títulos adecuados en la propia gráfica (se valorará positivamente esta alternativa).
 
@@ -90,210 +90,43 @@ Para los cuatro casos, deberá incluir una gráfica en la que se visualice clara
 Implemente el instrumento `Seno` tomando como modelo el `InstrumentDumb`. La señal **deberá** formarse mediante búsqueda de los valores en una tabla.
 
 - Incluya, a continuación, el código del fichero `seno.cpp` con los métodos de la clase Seno.
-
-```cpp
-#include <iostream>
-#include <math.h>
-#include "seno.h"
-#include "keyvalue.h"
-
-#include <stdlib.h>
-
-using namespace upc;
-using namespace std;
-
-InstrumentSeno::InstrumentSeno(const std::string &param)
-    : adsr(SamplingRate, param)
-{
-  bActive = false;
-  x.resize(BSIZE);
-
-  /*
-    You can use the class keyvalue to parse "param" and configure your instrument.
-    Take a Look at keyvalue.h
-  */
-  KeyValue kv(param);
-  int N;
-  if (!kv.to_int("N", N))
-    N = 40; // default value
-
-  /*additionally, we can add another parameter that dictates the mode of tbl values extractions where:
-
-    - 0 == no interpolation
-    - 1 == interpolation (first_value + second_value)/2
-  */
-
-  if (kv("I") != "false")
-    Interpolation = false; // default value
-  else
-  {
-    Interpolation = true;
-  }
-
-  /*we can also implemented seno instrument to be percussive (with exponential final decay)*/
-  if (kv("percussive") == "true")
-    percussive = true; // default value
-  else
-  {
-    percussive = false;
-  }
-
-  // Create a tbl with one period of a sinusoidal wave
-  tbl.resize(N);
-  float phase = 0, step = 2 * M_PI / (float)N;
-  index = 0;
-  for (int i = 0; i < N; ++i)
-  {
-    tbl[i] = sin(phase);
-    phase += step;
-  }
-}
-
-void InstrumentSeno::command(long cmd, long note, long vel)
-{
-  f0 = 440.0f * pow(2.0f, (note - 69.0f) / 12.0f); // convertion of NOTE to FREQ
-
-  if (cmd == 9)
-  { //'Key' pressed: attack begins
-    bActive = true;
-    adsr.start();
-    index = 0;
-    phas = 0.0f;
-    increment = ((f0 / SamplingRate) * tbl.size());
-    A = vel / 127.;
-    // A = std::clamp(static_cast<float>(vel) / 127.0f, 0.0f, 1.0f);
-  }
-  else if (cmd == 8)
-  { //'Key' released: sustain ends, release begins
-    adsr.stop();
-    end_hit = true;
-  }
-  else if (cmd == 0)
-  { // Sound extinguished without waiting for release to end
-    adsr.end();
-  }
-}
-
-const vector<float> &InstrumentSeno::synthesize()
-{
-  if (not adsr.active())
-  {
-    x.assign(x.size(), 0);
-    bActive = false;
-    return x;
-  }
-  else if (not bActive)
-    return x;
-
-  /*En general, al recorrer la tabla con los saltos adecuados para producir una cierta
-  frecuencia fundamental, será necesario acceder a índices no enteros de la tabla. Es
-  decir, el valor deseado no se corresponde con ninguno de los que están almacenados
-  en ella, sino a uno intermedio entre dos que sí lo están (que pueden ser el último y el
-  primero...).
-
-  ◦ En primera aproximación, puede redondear el índice requerido a entero y usar
-  para la muestra uno de los valores almacenados en la tabla. <-- LO QUE ESTAMOS USANDO AHORA
-
-  ⋄ Pero esta solución introduce una distorsión que es claramente audible.
-
-  ◦ Como trabajo de ampliación, se propone calcular el valor de la muestra como
-  interpolación lineal entre los valores inmediatamente anterior y posterior al índice
-  deseado (pero recuerde que el siguiente del último es el primero...)*/
-  for (unsigned int i = 0; i < x.size(); ++i)
-  {
-    phas += increment;
-    /*if percussive == true and note end has been hit*/
-    if (percussive && end_hit)
-    {
-      if (std::floor(phas) == phas || !Interpolation)
-      {
-        x[i] = A * tbl[round(phas)] * pow(0.99935, (int)interrupted_index);
-        interrupted_index++;
-      }
-      else // phas is a non intger, we must interpolate
-      {
-        x[i] = A * getInterpolatedValue(phas) * pow(0.99935, (int)interrupted_index);
-        interrupted_index++;
-      }
-    }
-    else
-    {
-      if (std::floor(phas) == phas || !Interpolation)
-      {
-        x[i] = A * tbl[round(phas)];
-      }
-      else // phas is a non intger, we must interpolate
-      {
-        x[i] = A * getInterpolatedValue(phas);
-      }
-    }
-    while (phas >= tbl.size())
-      phas = phas - tbl.size();
-  }
-  adsr(x); // apply envelope to x and update internal status of ADSR
-
-  return x;
-}
-
-/*en caso de quer realizar la ampliación como dice arriba, podemos realizar la interpolación
-   de la siguiente manera:*/
-
-float InstrumentSeno::getInterpolatedValue(const float phas)
-{
-
-  int tbl_size = tbl.size();
-  // static_cast/size_t types for multi-platform compatibility
-  size_t lowerIndex = static_cast<size_t>(std::floor(phas));
-  size_t upperIndex = static_cast<size_t>(std::ceil(phas));
-
-  // Boundary conditions for lowerIndex and upperIndex
-  if (lowerIndex >= tbl_size || upperIndex >= tbl_size)
-  {
-    lowerIndex = tbl_size - 1;
-    upperIndex = 0;
-  }
-
-  // Interpolate between tbl[lowerIndex] and tbl[upperIndex]
-  float lowerValue = tbl[lowerIndex];
-  float upperValue = tbl[upperIndex];
-
-  return (lowerValue + upperValue) / 2;
-}
-
-```
+![Codigo1](img/Codigo1.png)
+![Codigo2](img/Codigo2.png)
+![Codigo3](img/Codigo3.png)
+![Codigo4](img/Codigo4.png)
 - Explique qué método se ha seguido para asignar un valor a la señal a partir de los contenidos en la tabla, e incluya una gráfica en la que se vean claramente (use pelotitas en lugar de líneas) los valores de la tabla y los de la señal generada.
 
   *Como se ve en el for() del constructor de la clase **InstrumentSeno**, la tabla se construye en base a un periodo entero de una señal senoidal como cualquier otra, en incrementos que van en función del número de muestras que deseamos tener dentro de la tabla, es decir, como más puntos almacenemos, más pequeños serán los incrementos y por lo tanto tendremos el equivalente de un periodo de senoide almacenado en la tabla muestreado con frecuencia de muestreo más alta.*
 
   *Cuando los valores estén ya dentro de la tabla, la recorremos con una velocidad determinada, cosa que viene dada por la frecuencia fundamental del propio instrumento seno mediante la conversión de "note" (valor determinado por el fichero `.sco`) a f0:*
 
-  ```cpp
+  ```
   f0 = 440.0f * pow(2.0f, (note - 69.0f) / 12.0f);
   ```
 
   *El recorrido de la tabla se realiza posterior a una llamada al método command(), donde en caso de iniciarse una nota, declaramos la variable que nos indica la velocidad a la cual recorrer la tabla, lo ejecutamos asi:*
 
-  ```cpp
+  ```
   increment = ((f0 / SamplingRate) * tbl.size());
   ```
 
   *Gracias a esta variable, cuando llamemos al método **synthesize()**, podremos recorrer la tabla a la velocidad deseada. Por ejemplo, si nuestra tabla almacena 40 valores (valor default de N (tamaño de `tbl`)) para recorrer la tabla a velocidad de muestra a muestra (sin saltarnos ninguna, que en teoría podría entenderse como la velocidad más baja, aunque también sería posible ir 1/2 o 1/4 o menos de muestras/tick) nuestra frecuencia fundamental `f0` debe ser un 1/40 de la frecuencia de muestreo (declarada como `SamplingRate` en el código) que equivale a 44100 Hz.*
 
-  *En este caso, el señal base reproducido por el instrumento Seno sería idéntico al señal almacenado en `tbl[n]`. A continuación graficamos en rojo el señal `tbl[n]` junto con la reproducción del instrumento Seno cuando se cumplen dichas condiciones de `f0`. Se ha sumado 1 al señal `x[n]` para que pudiera distinguirse del señal base `tbl[n]`:*
+  *En este caso, el señal base reproducido por el instrumento Seno sería idéntico al señal almacenado en tbl[n]. A continuación graficamos en rojo el señal tbl[n] junto con la reproducción del instrumento Seno cuando se cumplen dichas condiciones de f0. Se ha sumado 1 al señal x[n] para que pudiera distinguirse del señal base tbl[n]:*
 
-  ![visualización señal base tbl[n] con x[n] cuando f0 = Fs/40](img/SR:40_noInterpolation.png)
+  ![visualización señal base tbl cuando f0 = Fs/40](img/SR:40_noInterpolation.png)
 
-  *De hecho esta perfecta alineación entre los señales se producirá siempre que `f0` sea la N-ésima parte de la frecuencia de muestreo `SamplingRate`, donde N es el tamaño de la tabla.*
+  *De hecho esta perfecta alineación entre los señales se producirá siempre que f0 sea la N-ésima parte de la frecuencia de muestreo SamplingRate, donde N es el tamaño de la tabla.*
 
-  *Si quisiéramos recorrer la tabla a mayor velocidad y por lo tanto saltarnos muestras, como por ejemplo, ir de 2 en 2 muestras (el doble del caso anterior), debemos fijar `f0` al doble, por lo tanto a un 1/20 del `SamplingRate`. En este caso, el señal obtenido en base a la tabla `tbl` se construiria de la siguiente forma (si x[n] es el señal del instrumento y tbl[n] es la tabla donde se contienen los valores por defecto):*
+  *Si quisiéramos recorrer la tabla a mayor velocidad y por lo tanto saltarnos muestras, como por ejemplo, ir de 2 en 2 muestras (el doble del caso anterior), debemos fijar f0 al doble, por lo tanto a un 1/20 del SamplingRate. En este caso, el señal obtenido en base a la tabla tbl se construiria de la siguiente forma (si x[n] es el señal del instrumento y tbl[n] es la tabla donde se contienen los valores por defecto):*
 
   *x[0] = tbl[1], x[1] = tbl[3], x[2] = tbl[5] ...*
 
-  *A continuación mostramos un gráfico donde se puede visualizar de forma semejante al anterior gráfica, la diferencia entre las 2 señales, donde a `x[n]` se le ha sumado 1 para que pueda diferenciarse mejor de la otra señal. Hemos de tener en cuenta que aunque parezca que ambas señales estén durando lo mismo, cuando se vaya a realizar la orquestración, la reproducción de un instrumento se realiza a base de ticks/segundo y como `x[n]` ahora tiene menos puntos por periodo que la `x[n]` del apartado anterior (la mitad exactamente), ésta se reproduciría el doble de rápido y así es como aconseguiríamos la percepción de una `f0` distinta:*
+  *A continuación mostramos un gráfico donde se puede visualizar de forma semejante al anterior gráfica, la diferencia entre las 2 señales, donde a x[n] se le ha sumado 1 para que pueda diferenciarse mejor de la otra señal. Hemos de tener en cuenta que aunque parezca que ambas señales estén durando lo mismo, cuando se vaya a realizar la orquestración, la reproducción de un instrumento se realiza a base de ticks/segundo y como x[n] ahora tiene menos puntos por periodo que la x[n] del apartado anterior (la mitad exactamente), ésta se reproduciría el doble de rápido y así es como aconseguiríamos la percepción de una f0 distinta:*
 
   ![gráfico de muestras de la tabla vs señal construido](img/SR:20_noInterpolation.png)
 
-*Hasta ahora la recogida de valores desde `tbl[n]` se ha heco de forma exacta, es decir, no hay ambiguedad sobre que valores de la tabla escoger, ya que los incrementos eran enteros (en el primer caso de f0 = SamplingRate/40, el incremento era de 1 en 1 mientras que en el segundo caso el incremento era el doble, 2). También nos gustaría enseñar lo que sucedería cuando dichos incrementos no son tan perfectos, y nos encontramos en la situación de tener que coger valores de la tabla intermedios, por ejemplo, si incremento = 1.5, los valores a los que accederíamos en `tbl[n]` serian `tbl[0], tbl[1.5], tbl[3], tbl[4.5]...`. Se han implementado 2 soluciones para redimiarlo:*
+*Hasta ahora la recogida de valores desde tbl[n] se ha heco de forma exacta, es decir, no hay ambiguedad sobre que valores de la tabla escoger, ya que los incrementos eran enteros (en el primer caso de f0 = SamplingRate/40, el incremento era de 1 en 1 mientras que en el segundo caso el incremento era el doble, 2). También nos gustaría enseñar lo que sucedería cuando dichos incrementos no son tan perfectos, y nos encontramos en la situación de tener que coger valores de la tabla intermedios, por ejemplo, si incremento = 1.5, los valores a los que accederíamos en tbl[n] serian tbl[0], tbl[1.5], tbl[3], tbl[4.5].... Se han implementado 2 soluciones para redimiarlo:*
 
 * *Aproximación del índice decimal al entero más próximo e.g. 4.5 -> 5 o 3.4 = 3. Llamámosle el caso **1**.*
 
@@ -301,16 +134,16 @@ float InstrumentSeno::getInterpolatedValue(const float phas)
 
 *En cuanto el **caso 1**, este procedimiento se realiza con la ejecución de:*
 
-```cpp
+```
 x[i] = A * tbl[round(phas)];
 ```
 *Este método de resolución de índices puede ser problemática cuando se desee reproducir un señal con alta fidelidad y reducir las distorsiones incorporadas por dicha aproximación. Ocurrirá distorsión siempre que la `f0` que se esté emulando no sea un múltiplo exacto de 44100/N donde N es el tamaño de `tbl[n]`. En nuestro caso, N=40 y por lo tanto cualquier nota músical cuya equivalente `f0` no sea un múltiplo entero de 1102,5 Hz tendrá distorsión. Veamos un ejemplo donde usamos 2 notas músicales relativamente próximas en cuanto a la `f0` y observemos como realmente hay presencia de distorsión.*
 
-*Vamos a visualizar las "diferentes" formas de onda producidas por el instrumento Seno cuando queremos emular la nota `69` (`f0 = 440 Hz`) y luego la nota `73` (`f0 = 554 Hz`):*
+*Vamos a visualizar las "diferentes" formas de onda producidas por el instrumento Seno cuando queremos emular la nota 69 (`f0 = 440 Hz`) y luego la nota 73 (`f0 = 554 Hz`):*
 
-*Antes dijimos que para que el Seno cogiese todos los valores de la tabla (N=40), la `f0` de su nota tenia que ser 44100/40 = 1102.5 Hz. La nota 69 tiene un `f0` de 440 Hz, por lo tanto deberemos recorrer `tbl[n]` a mucha menor velocidad y tendremos que "inventarnos" valores en medio de otros dentro de la tabla. Aproximadamente, tendremos que "inventarnos" unos 2-3 muestras entre índices de la tabla sucesivos (1/40 / 440/44100). Si graficamos junto este señal otro con una `f0` parecida pero algo distinta, como por ejemplo la nota 73 cuyo `f0` equivale a unos 554 Hz, recorreremos la tabla un poco más rápida pero, lo importante de entender de este análisis, es el hecho que este método de aproximación del índice supone distorsión aparente ya que muestras sucesivas deben repetirse entre sí (básicamente cuando se usan frecuencias por debajo de los comentados 1102,5 Hz). Esto no es un efecto que se produce cuando se usan frecuencias fundamentales superiores a dicho valor, aunque siempre que no implementemos un método de interpolación inteligente, siempre estaremos limitados a los valores proporcionados por la tabla inicial. Más de esto después de la gráfica:*
+*Antes dijimos que para que el Seno cogiese todos los valores de la tabla (N=40), la f0 de su nota tenia que ser 44100/40 = 1102.5 Hz. La nota 69 tiene un f0 de 440 Hz, por lo tanto deberemos recorrer tbl[n] a mucha menor velocidad y tendremos que "inventarnos" valores en medio de otros dentro de la tabla. Aproximadamente, tendremos que "inventarnos" unos 2-3 muestras entre índices de la tabla sucesivos (1/40 / 440/44100). Si graficamos junto este señal otro con una f0 parecida pero algo distinta, como por ejemplo la nota 73 cuyo f0 equivale a unos 554 Hz, recorreremos la tabla un poco más rápida pero, lo importante de entender de este análisis, es el hecho que este método de aproximación del índice supone distorsión aparente ya que muestras sucesivas deben repetirse entre sí (básicamente cuando se usan frecuencias por debajo de los comentados 1102,5 Hz). Esto no es un efecto que se produce cuando se usan frecuencias fundamentales superiores a dicho valor, aunque siempre que no implementemos un método de interpolación inteligente, siempre estaremos limitados a los valores proporcionados por la tabla inicial. Más de esto después de la gráfica:*
 
-![gráfica de tbl[n] vs 2 señales de 2 notas distintas, sin interpolación](img/Note69vs73.png)
+![gráfica de tbl vs 2 señales de 2 notas distintas, sin interpolación](img/Note69vs73.png)
 *Notar que x[n] es la senoide de la nota 69 mientras que y[n] es de la nota 73.*
 
 *En cuanto al **caso 2**, su implementación se realizó para evitar los sucesos que suceden con el caso 1, donde hay muestras sucesivas repetidas, por falta de dicha interpolación. Vamos a enseñar una figura donde hay 2 gráifcas emparejadas, la de arriba representando el máximo de una forma de onda de un instrumento tipo seno con interpolación activado y la de abajo representando el mismo instrumento pero con interpolación desactivada:*
@@ -323,7 +156,7 @@ x[i] = A * tbl[round(phas)];
 - Si ha implementado la síntesis por tabla almacenada en fichero externo, incluya a continuación el código
   del método `command()`.
 
-```cpp
+```
 void InstrumentSeno::command(long cmd, long note, long vel) {
     f0 = 440.0f * pow(2.0f, (note - 69.0f) / 12.0f); // Conversión de nota a frecuencia
 
@@ -396,19 +229,19 @@ void InstrumentSeno::command(long cmd, long note, long vel) {
 
 ***effects.orc***
 
-```shell
+```
 13	Tremolo	fm=10; A=0.15;
 ```
 
 ***seno.orc***
 
-```shell
+```
 1	InstrumentSeno	ADSR_A=0.02; ADSR_D=0.1; ADSR_S=0.4; ADSR_R=0.1; N=40; I=false; percussive=false; 
 ```
 
 *Luego ejecutamos el programa `synth` de la siguiente manera (ubicandonos dentro de `work/`) que dió lugar al fichero de sonido `seno_tremolo_norma.wav` (todos los ficheros de sonidos realizados a lo largo de la práctica estan presentes en el mismo directorio de `work/` por si al lector le apetece):*
 
-```shell
+```
 synth -e effects.orc seno.orc doremi.sco seno_tremolo_normal.wav
 ```
 
@@ -432,13 +265,13 @@ synth -e effects.orc seno.orc doremi.sco seno_tremolo_normal.wav
 
 *Ahora pasamos a aplicar un efecto del tremolo aún más fuerte. Para cambiar las propidades del efecto, basta con modificar el fichero `work/effects.orc`, que ahora cogerá la siguiente forma:*
 
-```shell
+```
 13  Tremolo	fm=10; A=1.5;
 ```
 
 *Es decir, aumentamos la amplitud de modulación a un 150%, cosa que debería reflejarse como una variación mucha más brusca de la amplitud de las notas de la orquestración. Vamos a verlo ejecutando el comando `synth` enseñado anteriormente con exactamente la misma estructura, solo que ahora cambiamos el fichero de audio de salida por uno llamado `seno_tremolo_agresivo.wav`.*
 
-```shell
+```
 synth -e effects.orc seno.orc doremi.sco seno_tremolo_agresivo.wav
 ```
 
@@ -477,13 +310,13 @@ synth -e effects.orc seno.orc doremi.sco seno_tremolo_agresivo.wav
 
 *Hemos añadido la siguiente línea de metadatos:*
 
-```shell
+```
 14  Vibrato I=0.5; fm=10;
 ```
 
 ***doremi.sco***
 
-```shell
+```
 #Time; On (8)/Off (9); Channel; Note; Velocity;
 #Time; Control; Channel; Effect; On/Off;
 0	9	1	60	100
@@ -509,7 +342,7 @@ synth -e effects.orc seno.orc doremi.sco seno_tremolo_agresivo.wav
 
 *Luego ejecutamos el programa **synth** como siempre:*
 
-```shell
+```
 synth -e effects.orc seno.orc doremi.sco seno_vibrato_normal.wav
 ```
 
@@ -536,7 +369,7 @@ synth -e effects.orc seno.orc doremi.sco seno_vibrato_normal.wav
 
 Hemos añadido la siguiente línea de metadatos:
 
-```shell
+```
 14  Vibrato I=24; fm=200;
 ```
 
@@ -546,7 +379,7 @@ El archivo `doremi.sco` es el mismo que el utilizado para el Vibrato Normal.
 
 Luego ejecutamos el programa **synth** como siempre:
 
-```shell
+```
 synth -e effects.orc seno.orc doremi.sco seno_vibrato_agresivo.wav
 ```
 
