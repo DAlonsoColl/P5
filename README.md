@@ -814,6 +814,10 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
   `work/music`.
 - Indique, a continuación, la orden necesaria para generar cada una de las señales usando los distintos ficheros.
 
+  *Hemos elegido Help! de The Beatles y November Rain de Guns N’ Roses porque son dos temazos que, aunque muy distintos, muestran claramente cómo ha evolucionado la producción musical
+  a lo largo del tiempo. Help! tiene una producción más sencilla y directa, típica de los 60, mientras que November Rain está llena de arreglos, capas de instrumentos y detalles que
+  reflejan el estilo épico de los 90.*
+
     #### 2. "November Rain" (Guns N' Roses 1991)
 
     *Para esta pieza de Guns N' Roses, se utilizan los siguientes instrumentos:*
