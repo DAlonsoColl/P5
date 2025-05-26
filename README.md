@@ -441,6 +441,7 @@ synth -e work/effects.orc work/seno.orc work/doremi.sco work/audio_con_fuzz.wav
 ![COdigoseno2](img/CodigoSeno2.PNG)
 
 ***Command()***
+
 ![COd3](img/CodigoSeno3.PNG)
 ***Synthesize()***
 ![Cod4](img/CodigoSeno4.PNG)
@@ -448,6 +449,7 @@ synth -e work/effects.orc work/seno.orc work/doremi.sco work/audio_con_fuzz.wav
 ![Cod6](img/CodigoSeno6.PNG)
 ***getInterpolatedValue()***
 ![COd7](img/CodigoSeno7.PNG)
+
 *Dicho método **getInterpolatedValue()** no es nada más que un método adicional que inteligentemente interpola entre valores de una tabla determinada.*
 
 *Ha sido a través de esta implementación que hemos podido generar nuestros primeros sonidos de generación FM natural. A continuación enseñamos algunas gráficas para ejemplificar visualmente la relación existente entre los parámetros básicos de cualquier instrumento de síntesis FM (N1, N2 e I):*
