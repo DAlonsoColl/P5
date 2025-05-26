@@ -437,17 +437,22 @@ synth -e work/effects.orc work/seno.orc work/doremi.sco work/audio_con_fuzz.wav
 *Para la implementación del instrumento de síntesis FM, se ha tenido que implementar de nuevo los 3 métodos que definen a un instrumento cualquiera, igual como hicimos con los instrumentos anteriores:*
 
 ***Constructor SenoFM()***
+
 ![CodigoSeno1](img/CodigoSeno1.PNG)
 ![COdigoseno2](img/CodigoSeno2.PNG)
 
 ***Command()***
 
 ![COd3](img/CodigoSeno3.PNG)
+
 ***Synthesize()***
+
 ![Cod4](img/CodigoSeno4.PNG)
 ![Cod5](img/CodigoSeno5.PNG)
 ![Cod6](img/CodigoSeno6.PNG)
+
 ***getInterpolatedValue()***
+
 ![COd7](img/CodigoSeno7.PNG)
 
 *Dicho método **getInterpolatedValue()** no es nada más que un método adicional que inteligentemente interpola entre valores de una tabla determinada.*
