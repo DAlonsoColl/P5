@@ -32,7 +32,7 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
 
   ![gráfica de una ADSR genérica](img/ADSR_generica.png)
  
-  - *Adjuntamos un caso practico,como ejemplo utilizamos el instrumento seno con los parámetros de la envolvente ADSR anteriores para la generación de la primera nota "do" del archivo `doremi.sco`. Creamos el archivo de audio, el cual se llama seno.wav ejecutando el siguiente codigo:*
+  - *A modo de ejemplo, adjuntamos un caso práctico en el que se emplea el instrumento seno utilizando los parámetros de envolvente ADSR mencionados anteriormente para generar la primera nota "do" del archivo doremi.sco. El archivo de audio resultante se llama seno.wav y se genera ejecutando el siguiente código:*
 
     ```sh
     synth seno.orc doremi.sco seno.wav
