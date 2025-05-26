@@ -849,8 +849,6 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
     - Pista 6: Sección de Cuerdas de Respaldo
     - Pista 7: Percusión
 
-    *Se han creado dos versiones ligeramente diferentes de la orquestación de "Help!" para explorar distintas interpretaciones sonoras. La primera versión se enfoca en mantener una percusión más prominente y definida, utilizando ajustes estándar para los instrumentos. En contraste, la segunda versión busca un enfoque más suave, con una percusión más sutil y ajustes específicos en el tiempo de decaimiento de los instrumentos, lo cual altera el ritmo y la dinámica general de la canción.*
-
     *Orden para generar las señales:*
 
     ```bash
@@ -861,9 +859,6 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
     *Para escuchar la canción completa, haz clic en el siguiente enlace:*
 
     [Escuchar "Help"](work/music/Help.wav)
-
-    [Escuchar "Help (Alternative version)"](work/music/Help2.wav)
-
 
 ---
 
