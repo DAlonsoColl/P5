@@ -160,23 +160,20 @@ float SenoFMSimple::getInterpolatedValue(const float phas, string table)
     size_t lowerIndex = static_cast<size_t>(std::floor(phas));
     size_t upperIndex = static_cast<size_t>(std::ceil(phas));
 
-    // Boundary conditions for lowerIndex and upperIndex
+    
     if (lowerIndex >= tbl_size || upperIndex >= tbl_size)
     {
         lowerIndex = tbl_size - 1;
         upperIndex = 0;
     }
 
-    // Interpolate between tbl[lowerIndex] and tbl[upperIndex]
+   
     float lowerValue = (*tbl)[lowerIndex];
     float upperValue = (*tbl)[upperIndex];
 
-    // compute interpolation weights
     float interval_length = upperIndex - lowerIndex;
     float lower_index_weight = (upperIndex - phas) / interval_length;
     float upper_index_weight = (phas - lowerIndex) / interval_length;
-
-    // computation of interpolated value
     float interpolated_value = lower_index_weight * lowerValue + upper_index_weight * upperValue;
 
     return interpolated_value;
