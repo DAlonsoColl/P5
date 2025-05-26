@@ -28,7 +28,7 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
 
 * Un instrumento con una envolvente ADSR genérica, para el que se aprecie con claridad cada uno de sus parámetros: ataque (A), caída (D), mantenimiento (S) y liberación (R).
 
-  - *A continuación adjuntamos la grafica de ADSR genérica, donde podemos observar que el parametro ataque tiene un 10% de duración, el de caída consiste en un 20%, el de  mantenimiento un  50% y hay una liberación final del 20% (porcentajes relativos a un intervalo de tiempo determinado).* 
+  - *Aquí mostramos la gráfica genérica de una envolvente ADSR, en la que se aprecia que el parámetro de ataque ocupa un 10% del tiempo total, la fase de caída representa un 20%, la de sostenimiento abarca un 50%, y la etapa final de liberación corresponde al 20% restante (todos los porcentajes son relativos a un intervalo de tiempo específico).* 
 
   ![gráfica de una ADSR genérica](img/ADSR_generica.png)
  
