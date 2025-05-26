@@ -50,7 +50,7 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
 
     * El intérprete mantiene la nota *pulsada* hasta su completa extinción.
 
-      - *podemos observar como no hay existencia (almenos apreciable) de la región de mantenimiento, y la caída hacia 0 del instrumento se compone de una decaída progresiva y gradual.*
+      - *Vemos como no hay existencia de la región de mantenimiento, y la caída hacia 0 del instrumento se compone de una decaída progresiva y gradual.*
 
       ![gráfica de una ADSR percusiva (1)](img/ADSR_percusivo1.png)
 
