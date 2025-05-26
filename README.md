@@ -814,7 +814,7 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
   `work/music`.
 - Indique, a continuación, la orden necesaria para generar cada una de las señales usando los distintos ficheros.
 
-    #### 2. "November Rain"
+    #### 2. "November Rain" (Guns N' Roses 1991)
 
     *Para esta pieza de Guns N' Roses, se utilizan los siguientes instrumentos:*
 
@@ -837,7 +837,7 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
 
     [Escuchar "November Rain"](work/music/November_rain.wav)
 
-    #### 3. "Help!" (The Beatles)
+    #### 3. "Help!" (The Beatles 1965)
 
     *Para esta canción de The Beatles, se usan los siguientes instrumentos:*
 
