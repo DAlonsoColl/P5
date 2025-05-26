@@ -274,13 +274,6 @@ synth -e effects.orc seno.orc doremi.sco seno_vibrato_normal.wav
 
 *A simple vista las señales de la orquestación parecen no tener ningua perturbación o efecto aplicado, pero si miramos al espectro frecuencial, nos vamos a dar cuenta de muchas curiosidades que dan explicación de porqué suena como suena esta grabación con vibrato.*
 
-![Graficas de comparación Waveform Normal vs Waveform + Vibrato](img/DoReMi_Vibrato_FFT_normal.png)
-
-***Imagen generada a partir del código Python en `scripts/vibrato3.py`***
-
-*Si miramos fijadamente, solo la primera y las 2 últimas notas permanecen puras, es decir, no presencian el efecto del vibrato. Esto es fácilmente explicado por el `doremi.sco` que hemos usado, donde podemos ver que solo aplicamos el vibrato a un conjunto intermedio de notas. En cuanto a estas notas que sí tienen perturbación, podemos ver que las representaciones temporales no son muy efectivas para ver los efectos de dicha perturbación. Por eso hemos empleado el uso de la transformada de Fourier, cuya representación sí nos da una mucha mejor visualización de la perturbación provocada por el efecto del vibrato.*
-
-*La primera fila supone la pareja (señal temporal sin tremolo, FFT de dicho señal) mientras que la segunda está diseñada para que haga de contraste con la anterior, donde podemos ver que frecuencialmente existe bastante perturbación. Las demas filas que siguen sirven para ver la peturbación aplicada a cada nota, donde ya deja de existir un afinado y bien definido pico frecuencial (como debería ser según la teoría) sino que existe energía en las frecuencias justo vecinas de ese mismo pico, contaminándola frecuencialmente.*
 
 ![Comparación Espectograma Vibrato Normal](img/audio_comparison_vibrato_normal.png)
 
@@ -311,9 +304,7 @@ synth -e effects.orc seno.orc doremi.sco seno_vibrato_agresivo.wav
 
 *Al escuchar atentamente el archivo resultante, la modulación más rápida (fm=200Hz) y la mayor desviación (I=24) hacen que las frecuencias de las notas varíen de manera mucho más agresiva, lo que se traduce en un sonido más vibrante e inestable.*
 
-![Graficas de comparación Waveform Normal vs Waveform + Vibrato](img/DoReMi_Vibrato_FFT_agresivo.png)
 
-*En la FFT, se observa una mayor dispersión de energía de las frecuencias centrales de cada nota. A diferencia del Vibrato Normal, donde la frecuencia central vibra alrededor de un punto, en el Vibrato Agresivo aparecen armónicos alejados de la frecuencia central. Estos armónicos indican que la señal está experimentando modulación a frecuencias mucho más altas, produciendo componentes de frecuencia adicionales que se distancian de la frecuencia original de la nota. Esto resulta en una representación frecuencial mucho más compleja y dispersa.*
 
 ![Comparación Espectograma Vibrato Agresivo](img/audio_comparison_vibrato_agresivo.png)
 
