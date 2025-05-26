@@ -865,11 +865,4 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
     [Escuchar "Help (Alternative version)"](work/music/Help2.wav)
 
 
-    #### Detalles adicionales
-
-    *Cada instrumento ha sido ajustado seleccionando los parámetros en base al tipo de sonido deseado y las características específicas de cada canción. Este proceso asegura que cada instrumento contribuya de manera armoniosa al conjunto musical, manteniendo una coherencia estilística y expresiva en toda la composición.*
-
-    *Se ha puesto un énfasis especial en la riqueza instrumental, garantizando que cada instrumento no solo cumpla su función melódica o armónica, sino que también añada textura y profundidad al arreglo general. Esperamos que, de este modo, nuestro oyente disfrute al máximo de su experiencia auditiva, sumergiéndose en una interpretación musical enriquecedora y envolvente.*
-
----
 ---
