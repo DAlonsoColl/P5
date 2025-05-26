@@ -866,3 +866,8 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
 
 
 ---
+
+> NOTA:
+>
+> No olvide escuchar el resultado generado y comprobar que no se producen ruidos extraños o distorsiones.
+> Sobre todo, tenga en cuenta la salud auditiva de quien será encargado de corregir su trabajo.
