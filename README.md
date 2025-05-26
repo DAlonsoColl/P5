@@ -28,11 +28,11 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
 
 * Un instrumento con una envolvente ADSR genérica, para el que se aprecie con claridad cada uno de sus parámetros: ataque (A), caída (D), mantenimiento (S) y liberación (R).
 
-  - *A continuación adjuntamos la grafica de ADSR genérica, donde podemos observar que el parametro ataque tiene un 10% de duración, el de caída consiste en un 20%, el de  mantenimiento un  50% y hay una liberación final del 20% (porcentajes relativos a un intervalo de tiempo determinado).* 
+  - *Aquí mostramos la gráfica genérica de una envolvente ADSR, en la que se aprecia que el parámetro de ataque ocupa un 10% del tiempo total, la fase de caída representa un 20%, la de sostenimiento abarca un 50%, y la etapa final de liberación corresponde al 20% restante (todos los porcentajes son relativos a un intervalo de tiempo específico).* 
 
   ![gráfica de una ADSR genérica](img/ADSR_generica.png)
  
-  - *Adjuntamos un caso practico,como ejemplo utilizamos el instrumento seno con los parámetros de la envolvente ADSR anteriores para la generación de la primera nota "do" del archivo `doremi.sco`. Creamos el archivo de audio, el cual se llama seno.wav ejecutando el siguiente codigo:*
+  - *A modo de ejemplo, adjuntamos un caso práctico en el que se emplea el instrumento seno utilizando los parámetros de envolvente ADSR mencionados anteriormente para generar la primera nota "do" del archivo doremi.sco. El archivo de audio resultante se llama seno.wav y se genera ejecutando el siguiente código:*
 
     ```sh
     synth seno.orc doremi.sco seno.wav
@@ -50,7 +50,7 @@ Tomando como modelo un instrumento sencillo (puede usar el InstrumentDumb), gene
 
     * El intérprete mantiene la nota *pulsada* hasta su completa extinción.
 
-      - *podemos observar como no hay existencia (almenos apreciable) de la región de mantenimiento, y la caída hacia 0 del instrumento se compone de una decaída progresiva y gradual.*
+      - *Vemos como no hay existencia de la región de mantenimiento, y la caída hacia 0 del instrumento se compone de una decaída progresiva y gradual.*
 
       ![gráfica de una ADSR percusiva (1)](img/ADSR_percusivo1.png)
 
@@ -552,7 +552,11 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
   `work/music`.
 - Indique, a continuación, la orden necesaria para generar cada una de las señales usando los distintos ficheros.
 
-    #### 2. "November Rain"
+  *Hemos elegido Help! de The Beatles y November Rain de Guns N’ Roses porque son dos temazos que, aunque muy distintos, muestran claramente cómo ha evolucionado la producción musical
+  a lo largo del tiempo. Help! tiene una producción más sencilla y directa, típica de los 60, mientras que November Rain está llena de arreglos, capas de instrumentos y detalles que
+  reflejan el estilo épico de los 90.*
+
+    #### 2. "November Rain" (Guns N' Roses 1991)
 
     *Para esta pieza de Guns N' Roses, se utilizan los siguientes instrumentos:*
 
@@ -575,7 +579,7 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
 
     [Escuchar "November Rain"](work/music/November_rain.wav)
 
-    #### 3. "Help!" (The Beatles)
+    #### 3. "Help!" (The Beatles 1965)
 
     *Para esta canción de The Beatles, se usan los siguientes instrumentos:*
 
@@ -586,8 +590,6 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
     - Pista 5: Sección de Cañas
     - Pista 6: Sección de Cuerdas de Respaldo
     - Pista 7: Percusión
-
-    *Se han creado dos versiones ligeramente diferentes de la orquestación de "Help!" para explorar distintas interpretaciones sonoras. La primera versión se enfoca en mantener una percusión más prominente y definida, utilizando ajustes estándar para los instrumentos. En contraste, la segunda versión busca un enfoque más suave, con una percusión más sutil y ajustes específicos en el tiempo de decaimiento de los instrumentos, lo cual altera el ritmo y la dinámica general de la canción.*
 
     *Orden para generar las señales:*
 
@@ -600,14 +602,9 @@ de su agrado o composición. Se valorará la riqueza instrumental, su modelado y
 
     [Escuchar "Help"](work/music/Help.wav)
 
-    [Escuchar "Help (Alternative version)"](work/music/Help2.wav)
-
-
-    #### Detalles adicionales
-
-    *Cada instrumento ha sido ajustado seleccionando los parámetros en base al tipo de sonido deseado y las características específicas de cada canción. Este proceso asegura que cada instrumento contribuya de manera armoniosa al conjunto musical, manteniendo una coherencia estilística y expresiva en toda la composición.*
-
-    *Se ha puesto un énfasis especial en la riqueza instrumental, garantizando que cada instrumento no solo cumpla su función melódica o armónica, sino que también añada textura y profundidad al arreglo general. Esperamos que, de este modo, nuestro oyente disfrute al máximo de su experiencia auditiva, sumergiéndose en una interpretación musical enriquecedora y envolvente.*
-
 ---
----
+
+> NOTA:
+>
+> No olvide escuchar el resultado generado y comprobar que no se producen ruidos extraños o distorsiones.
+> Sobre todo, tenga en cuenta la salud auditiva de quien será encargado de corregir su trabajo.
